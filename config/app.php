@@ -169,6 +169,14 @@ return [
          */
 
         /*
+         * An opinionated implementation of Cartalyst's Sentinel package
+         * for Laravel 5.6
+         * https://github.com/SRLabs/Centaur
+         * https://cartalyst.com/manual/sentinel/2.0
+         */
+        Centaur\CentaurServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
