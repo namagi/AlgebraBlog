@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>
-            Algebra blog - @if ($_SERVER['SERVER_PORT'] == "8000") LARAVEL @else APACHE @endif
+            Algebra blog - @if ($_SERVER['SERVER_PORT'] == "8000") INBUILT @else APACHE @endif
         </title>
 
         <!-- Fonts -->
