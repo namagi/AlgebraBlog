@@ -28,7 +28,7 @@ class Post extends Model
      * @param array $post
      * @return object Post
      */
-    public function savePost($post) : object {
+    public function savePost($post) {
         return $this->create($post);
     }
 

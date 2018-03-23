@@ -50,6 +50,9 @@ Route::resource('users', 'UserController');
 // Roles
 Route::resource('roles', 'RoleController');
 
+// Posts
+Route::resource('posts', 'PostController');
+
 // Dashboard
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => function() {
     return view('centaur.dashboard');
