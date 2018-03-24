@@ -177,6 +177,13 @@ return [
         Centaur\CentaurServiceProvider::class,
 
         /*
+         * Laravel/PHP IDE helper for more complete autocompletion
+         * https://github.com/barryvdh/laravel-ide-helper
+         */
+        // see: app/Providers/AppServiceProvider.php, register()
+        //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
