@@ -19,7 +19,8 @@
                     <thead>
                         <tr>
                             <th>Title</th>
-                            <th>Author</th>
+                            <th>Author email</th>
+                            <th>Author id</th>
                             <th>Created</th>
                             <th>Options</th>
                         </tr>
@@ -29,6 +30,8 @@
                             @foreach ($posts as $post)
                                 <tr>
                                     <td>{{ $post->title }}</td>
+                                    <td>{{ \App\Models\User::findOrFail($post->user_id, ['email'])->email }}</td>
+                                    {{--<td>{{ \App\Models\User::email($post->user_id)->pluck('email')[0] }}</td>--}}
                                     <td>{{ $post->user_id }}</td>
                                     <td>{{ date('d.m.Y.', strtotime($post->created_at)) }}</td>
                                     <td>

@@ -15,14 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/save-post', function () {
-    $data = array(
-        'title' => 'Pero',
-        'slug' => 'pero',
-        'content' => 'some data content',
-        'user_id' => 1,
-        );
-});
 
 // Authorization
 Route::get('/login', ['as' => 'auth.login.form', 'uses' => 'Auth\SessionController@getLogin']);
