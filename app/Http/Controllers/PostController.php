@@ -16,12 +16,22 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('created_at', 'DESC')->paginate(10);
-        return view('centaur.posts.index',
-            [
-                'posts' => $posts,
-            ]
-        );
+        if (Sentinel::check()) {
+            if (Sentinel::inRole('administrator'))
+                $posts = Post::orderBy('created_at', 'DESC')->paginate(10);
+            else {
+                $posts = Post::where('user_id', Sentinel::getUser()->id)->orderBy('created_at', 'DESC')->paginate(10);
+            }
+
+            return view('centaur.posts.index',
+                [
+                    'posts' => $posts,
+                ]
+            );
+        } else {
+            session()->flash('warning', 'Need to login first.');
+            return redirect()->route('auth.login.form');
+        }
     }
 
     /**
