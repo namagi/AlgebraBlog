@@ -1,3 +1,12 @@
+# custom
+.gitignore
+gatdc1de3d6f19a868c5d15ac0ec57b0eb05ed10606
+*sublime*
+styles/
+*-tmp
+nbproject/
+js/
+# end custom
 /node_modules
 /public/hot
 /public/storage
