@@ -29,14 +29,15 @@
                             @foreach ($posts as $post)
                                 <tr>
                                     <td>{{ $post->title }}</td>
-                                    <td>{{ $post->user_id }}</td>
+                                    <td>{{ $post->user->email }}</td>
                                     <td>{{ date('d.m.Y.', strtotime($post->created_at)) }}</td>
                                     <td>
                                         <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-default">
                                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                             Edit
                                         </a>
-                                        <a href="{{ route('posts.destroy', $post->id) }}" class="btn btn-danger action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
+                                        <a href="{{ route('posts.destroy', $post->id) }}" class="btn btn-danger action_confirm"
+                                           data-method="delete" data-token="{{ csrf_token() }}">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                             Delete
                                         </a>
