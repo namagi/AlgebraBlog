@@ -68,7 +68,7 @@ class PostController extends Controller
         try {
             $post->savePost($data);
         } catch (Exception $e) {
-            session()->flash('danger', $e->getMessage());
+            session()->flash('error', $e->getMessage());
             return redirect()->back();
         }
 
@@ -97,11 +97,16 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        return view('centaur.posts.edit',
-            [
-                'post' => $post,
-            ]
-        );
+        if (Sentinel::getUser()->id === $post->user_id || Sentinel::inRole('administrator')) {
+            return view('centaur.posts.edit',
+                [
+                    'post' => $post,
+                ]
+            );
+        } else {
+            session()->flash('error', 'Not possible to do that');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -125,16 +130,17 @@ class PostController extends Controller
         );
 
         $post = Post::findOrFail($id);
+        if (Sentinel::getUser()->id === $post->user_id || Sentinel::inRole('administrator')) {
+            try {
+                $post->updatePost($data);
+            } catch (Exception $e) {
+                session()->flash('error', $e->getMessage());
+                return redirect()->back();
+            }
 
-        try {
-            $post->updatePost($data);
-        } catch (Exception $e) {
-            session()->flash('danger', $e->getMessage());
-            return redirect()->back();
+            session()->flash('success', 'Uspješno ste ažurirali post <strong>"' . $post->title . '</strong>"');
+            return redirect()->route('posts.index');
         }
-
-        session()->flash('success', 'Uspješno ste ažurirali post <strong>"' . $post->title . '</strong>"');
-        return redirect()->route('posts.index');
     }
 
     /**
@@ -147,9 +153,11 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        $post->delete();
-        session()->flash('success', 'Uspješno ste izbrisali post zvan <strong>"' . $post->title . '</strong>"');
+        if (Sentinel::getUser()->id === $post->user_id || Sentinel::inRole('administrator')) {
+            $post->delete();
+            session()->flash('success', 'Uspješno ste izbrisali post zvan <strong>"' . $post->title . '</strong>"');
 
-        return redirect()->back();
+            return redirect()->back();
+        }
     }
 }
