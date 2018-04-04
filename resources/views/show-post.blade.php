@@ -22,9 +22,10 @@
         @if ($post->comments->count() > 0)
                 @foreach ($post->comments as $comment)
                     <div class="container-fluid">
-                        <h3>{{ $comment->user->email }}</h3>
-                        <p>{{ $comment->content }}</p>
+                        <p><strong>{{ $comment->user->email }}</strong></p>
+                        <p style="border-left: 1px solid #000; padding-left: 1em">{{ $comment->content }}</p>
                     </div>
+                    <hr />
                 @endforeach
         @else
             <div class="container-fluid">
@@ -45,7 +46,7 @@
             </div>
 
             {{ csrf_field() }}
-            <input type="hidden" name="post_id" value="{{ $post->id }}"
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
             <div class="form-group">
                 <button type="submit" class="btn btn-default" style="float:right;margin-bottom:5em">Post comment</button>
             </div>

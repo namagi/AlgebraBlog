@@ -22,8 +22,8 @@
 
                 <div class="panel-footer">
                     <a href="{{ route('post.show', $post->slug) }}" class="btn btn-primary btn-xs">Read more...</a>
+                    <span style="float:right; font-style:italic;">{{ $post->commentsCountFormatted() }}</span>
                 </div>
-
             </div>
         </div>
     @endforeach

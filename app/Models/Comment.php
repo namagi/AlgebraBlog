@@ -26,7 +26,7 @@ class Comment extends Model
      * Update comment
      */
     public function updateComment($comment) {
-        return $this->create($comment);
+        return $this->update($comment);
     }
 
     /**
@@ -52,6 +52,4 @@ class Comment extends Model
     {
         return $this->hasMany('App\Models\Comment');
     }
-
-    
 }

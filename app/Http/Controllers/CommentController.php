@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Sentinel;
 use App\Models\Comment;
 use Exception;
+use DB;
 
 
 class CommentController extends Controller
@@ -17,7 +18,20 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        if (!Sentinel::check()) {
+            session()->flash('info', 'Morate se prijaviti.');
+            return view('centaur.auth.login');
+        } elseif (Sentinel::inRole('administrator')) {
+            $comments = Comment::orderBy('user_id', 'DESC')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10);
+        } else {
+            $comments = Comment::where('user_id', Sentinel::getUser()->id)->orderBy('created_at', 'DESC')->paginate(10);
+        }
+
+        return view('console', [
+            'comments' => $comments
+        ]);
     }
 
     /**
@@ -39,9 +53,9 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,
-                [
-                    'comment' => 'required'
-                ]);
+            [
+                'comment' => 'required'
+            ]);
 
         $user_id = Sentinel::getUser()->id;
         $data = array(
@@ -82,7 +96,15 @@ class CommentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+
+        if (Sentinel::check()) {
+            if (Sentinel::inRole('administrator') || (Sentinel::getUser()->id === $comment->user_id)) {
+                return view('comments.edit', ['comment' => $comment]);
+            }
+        }
+
+        return redirect('/comments');
     }
 
     /**
@@ -94,7 +116,27 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,
+            [
+                'content' => 'required',
+            ]);
+
+        $data = array(
+            'content' => $request->get('content')
+        );
+
+        $comment = Comment::findOrFail($id);
+        if (Sentinel::getUser()->id === $comment->user_id || Sentinel::inRole('administrator')) {
+            try {
+                $comment->updateComment($data);
+            } catch (Exception $e) {
+                session()->flash('error', $e->getMessage());
+                return redirect()->back();
+            }
+
+            session()->flash('success', 'Uspješno ste ažurirali komentar');
+            return redirect()->route('comments.index');
+        }
     }
 
     /**
@@ -105,6 +147,47 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+        if (Sentinel::inRole('administrator') || Sentinel::getUser()->id === $comment->user_id){
+            $comment->delete($id);
+            session()->flash('success', 'Komentar je obrisan');
+        }
+
+        return redirect()->back();
+    }
+
+    public function status(Request $request, $comment_id)
+    {
+        // ->                  -      0      1    2
+        // Request->path() = {URL/}comments/id/new_status
+        $new_status = explode('/', $request->path())[2];
+
+        define('STATUS',
+                [
+                    0 => 'blokiran',
+                    1 => 'odobren',
+                    2 => 'na čekanju'
+                ]
+            );
+
+        if (Sentinel::check()) {
+            if (Sentinel::inRole('administrator')) {
+                try {
+                    DB::table('comments')->where('id', $comment_id)->update(['status' => $new_status]);
+                } catch (Exception $e) {
+                    session()->flash('error', $e->getMessage());
+                    return redirect('/comments');
+                }
+            } else {
+                session()->flash('error', 'Niste autorizirani');
+                return redirect('/comments');
+            }
+        } else {
+            session()->flash('warning', 'Morate se prijaviti');
+            return redirect('/login');
+        }
+
+        session()->flash('success', 'Komentar je ' . STATUS[$new_status]);
+        return redirect()->back();
     }
 }

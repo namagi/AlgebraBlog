@@ -44,8 +44,15 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         @if (Sentinel::check())
-                            <li><p class="navbar-text">{{ Sentinel::getUser()->email }}</p></li>
-                            <li><a href="{{ route('auth.logout') }}">Log Out</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-haspopup="true" aria-expanded="false">{{ Sentinel::getUser()->email }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ route('comments.index') }}">Console</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{ route('auth.logout') }}">Log Out</a></li>
+                                </ul>
+                            </li>
                         @else
                             <li><a href="{{ route('auth.login.form') }}">Login</a></li>
                             <li><a href="{{ route('auth.register.form') }}">Register</a></li>

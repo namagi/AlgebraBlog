@@ -14,6 +14,11 @@
 Route::get('/','HomeController@index')->name('home');
 Route::get('/post/{slug}', 'HomeController@show')->name('post.show');
 
+Route::get('comments', 'CommentController@index')->name('comment.status');
+Route::get('comment/{comment_id}/{new_status}', [
+    'uses' => 'CommentController@status',
+    'as'   => 'status'
+    ]);
 
 
 // Authorization
@@ -47,6 +52,10 @@ Route::resource('posts', 'PostController');
 
 // Comments
 Route::resource('comments', 'CommentController');
+
+// Console (editing, etc.)
+Route::resource('console', 'ConsoleController');
+
 // Dashboard
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => function() {
     return view('centaur.dashboard');

@@ -71,4 +71,15 @@ class Post extends Model
     {
         return $this->hasMany('App\Models\Comment')->where('status', 1);
     }
+
+    /**
+     * Return comments count as singular or plural formatted string
+     *
+     * @return string
+     */
+    public function commentsCountFormatted()
+    {
+        $count = $this->comments()->count();
+        return (($count === 0) ? 'No comments' : $count . (($count === 1) ? ' comment' : ' comments'));
+    }
 }
